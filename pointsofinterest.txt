@@ -1,0 +1,18 @@
+document.h:
+QString Document::filename() const;
+QString Document::title() const;
+int Document::untitledIndex() const;
+int Document::wordCount() const;
+int Document::wordCountDelta() const;
+
+stack.h:
+Document* Stack::currentDocument() const;
+int Stack::currentIndex() const;
+signal void Stack::documentSelected(int index);
+
+window.h:
+void Window::tabClicked(int index);
+
+daily_progress.h:
+QVariant DailyProgress::data(const QModelIndex& index, int role = Qt::DisplayRole) const;
+void increaseTime();

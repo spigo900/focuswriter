@@ -884,6 +884,9 @@ void Window::tabClicked(int index)
 	updateSave();
 	updateFormatAlignmentActions();
 	m_documents->currentDocument()->text()->setFocus();
+    // This seems to be about what I need to do:
+    // m_documents->currentDocument()->title()
+    sql_logger.logUpdate(m_documents->currentDocument());
 }
 
 //-----------------------------------------------------------------------------

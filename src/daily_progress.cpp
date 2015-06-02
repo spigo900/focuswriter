@@ -21,6 +21,8 @@
 
 #include "preferences.h"
 
+#include "sql_logger.hpp"
+
 #include <QFile>
 #include <QLocale>
 #include <QSettings>
@@ -267,9 +269,11 @@ int DailyProgress::percentComplete()
 
 void DailyProgress::increaseTime()
 {
+    // BOOKMARKED: I'm coming back to this one later.
 	qint64 msecs = m_typing_timer.restart();
 	if (msecs < 30000) {
 		m_msecs += msecs;
+        Logger::timeSinceFirstAccess += msecs;
 		m_current_valid = false;
 		updateProgress();
 	}
