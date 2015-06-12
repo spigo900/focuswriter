@@ -1,7 +1,7 @@
+#ifndef DB_HPP_
+#define DB_HPP_
 #include "sqlite3.h"
 #include <QString>
-
-
 
 class DB {
 
@@ -18,6 +18,7 @@ class SqlDB : public DB {
 
 public:
     SqlDB(QString path);
+    // SqlDB& operator=(SqlDB&&)
     void init();
     void connect();
     void disconnect();
@@ -27,19 +28,14 @@ private:
     const QString path;
 };
 
-static const logFileName = "writelog.db"
-static QString dbPath;
+// Maybe rework this at some point to expose a global const dbPath instead of...
+// whatever it does right now.
+static const QString logFileName = "writelog.db";
+//static QString dbPath;
 
-#if defined(Q_OS_MAC)
-  dbPath = QDir::homePath() + "/Library/Application Support/GottCode/FocusWriter/" + logFileName;
-#elif defined(Q_OS_UNIX)
-  dbPath = QString::fromLocal8Bit(qgetenv("XDG_DATA_HOME"));
-  if (dbPath.isEmpty()) {
-      dbPath = QDir::homePath() + "/.local/share/";
-  }
-  dbPath += ("/focuswriter/" + logFileName);
-#else
-  dbPath = QDir::homePath() + "/Application Data/GottCode/FocusWriter/" + logFileName;
+extern QString dbPath();
+// static QString dbPath();
+// const QString = dbPath();
+// extern SqlDB globalDB;
+
 #endif
-
-SqlDB globalDB = SqlDB(dbPath);

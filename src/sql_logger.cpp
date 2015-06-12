@@ -1,47 +1,66 @@
 #include "sql_logger.hpp"
+#include "db.hpp"
 
+#include <QModelIndex>
 #include <QDateTime>
-#inlcude <QString>
+#include <QString>
+#include <string>
+#include <QDir>
+
+#include "document.h"
 
 
 
-// void Logger::logTabChanged(int newIndex)
-// {
-//     // TODO: Make this actually write to the appropriate table.
+static const QString setup =
+    "CREATE TABLE IF NOT EXISTS FileTracking(Id INTEGER PRIMARY KEY, title TEXT, timestamp TEXT, words INT, wordDelta INT);";
+static const int wordsIndex = 1;
+static const int timeIndex = 2;
 
-//     // First part should log the end of the editing for the file, along with any
-//     // appropriate values -- time spent, word count delta, whatever.
-//     // this.database.exec()
+// Qt::DisplayRole is the appropriate role for accessing the stats
+// QModelIndex idxTime = QModelIndex(...);
+// QModelIndex idxWords = QModelIndex(...);
 
-//     // Second should change the last-accessed index to the new one and start
-//     // logging new values.
-//     this.lastIndex = newIndex;
-//     this.docAccessed = QDateTime::currentDateTimeUtc();
-//     // this.database.exec()
-// };
+// Is there any way I can get the time actually spent writing out of the
+// DailyProgress object? I should look into that.
 
-void logUpdate(Document* newDoc, int newIndex)
+static void logData(DB* db, QString title, QDateTime time, int words, int wordDelta = 0)
+{
+    QString sqlcmd = QString("INSERT INTO FileTracking(title, timestamp, words, wordDelta) "
+                             "VALUES('%1', '%2', %3, %4);")
+        .arg(
+            title,
+            time.toString(),
+            QString::number(words),
+            QString::number(wordDelta));
+    db->exec(sqlcmd);
+}
+
+// Set up the logger, connect to the database and make sure the schema works.
+Logger::Logger() : database(dbPath())
+{
+    // SqlDB database(dbPath());
+    // this->database = SqlDB(dbPath());
+    this->database.init();
+    this->database.connect();
+    this->database.exec(setup);
+}
+
+// Called when a file is saved. Should log the time, title, absolute wordcount
+// and wordcount delta.
+void Logger::logUpdate(Document* doc, int wordDelta)
 {
     // TODO: Make this actually write to the appropriate table.
     QDateTime now = QDateTime::currentDateTimeUtc();
+    logData(&database, doc->title(), now, doc->wordCount(), wordDelta);
+}
 
-    // First part should log the end of the editing for the file, along with any
-    // appropriate values -- time spent, word count delta, whatever.
-    QString title = this.lastDocTitle();
-    int words = this.wordsAtStart;
-    // TODO: Figure out how the hell to determine the current number of words
-    // when the last file may not even be open any more.
-    QDateTime start = this.docAccessed;
-    // End time should be the var 'now,' since there's not really any need to
-    // define a separate variable for it.
+// Called when a file is accessed. Should like the time, title and absolute
+// wordcount.
+void Logger::logAccess(Document* newDoc)
+{
+    // TODO: Make this actually write to the appropriate table.
+    QDateTime now = QDateTime::currentDateTimeUtc();
+    logData(&database, newDoc->title(), now, newDoc->wordCount());
+}
 
-    // this.database.exec()
-
-    // Second should change the last-accessed index to the new one and start
-    // logging new values.
-    this.lastDocTitle = newDoc->title();
-    this.docAccessed = now;
-    this.wordsAtStart = newDoc->wordCount();
-
-    this.lastIndex = newIndex;
-};
+Logger logger;

@@ -1,6 +1,0 @@
-class DB {
-
-
-public:
-    
-}

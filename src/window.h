@@ -30,7 +30,6 @@ class SessionManager;
 class Sound;
 class Stack;
 class TimerManager;
-class Logger;
 
 #include <QHash>
 #include <QMainWindow>
@@ -142,7 +141,6 @@ private:
 	bool m_fullscreen;
 	bool m_auto_save;
 	bool m_save_positions;
-    Logger sql_logger;
 	DailyProgress* m_daily_progress;
 	DailyProgressDialog* m_daily_progress_dialog;
 };

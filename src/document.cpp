@@ -39,6 +39,7 @@
 #include "smart_quotes.h"
 #include "sound.h"
 #include "spell_checker.h"
+#include "sql_logger.hpp"
 #include "theme.h"
 #include "window.h"
 
@@ -487,6 +488,8 @@ bool Document::save()
 		return false;
 	}
 
+    // logger.logUpdate(this, m_document_stats.wordCount() - words);
+    logger.logAccess(this);
 	m_saved_wordcount = m_document_stats.wordCount();
 
 	m_text->document()->setModified(false);
@@ -1239,6 +1242,7 @@ void Document::updateWordCount(int position, int removed, int added)
 	int words = m_document_stats.wordCount();
 	calculateWordCount();
 	m_daily_progress->increaseWordCount(m_document_stats.wordCount() - words);
+    // logger.logUpdate(this, m_document_stats.wordCount() - words);
 	emit changed();
 }
 

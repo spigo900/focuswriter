@@ -85,6 +85,7 @@ macx {
 	SOURCES += src/spelling/dictionary_provider_hunspell.cpp \
 		src/spelling/dictionary_provider_voikko.cpp
 }
+LIBS += -lsqlite3
 
 INCLUDEPATH += src src/fileformats src/qtsingleapplication src/qtzip src/spelling
 
@@ -167,6 +168,7 @@ SOURCES += src/action_manager.cpp \
 	src/daily_progress.cpp \
 	src/daily_progress_dialog.cpp \
 	src/daily_progress_label.cpp \
+    src/db.cpp \
 	src/document.cpp \
 	src/document_cache.cpp \
 	src/document_watcher.cpp \
@@ -188,6 +190,7 @@ SOURCES += src/action_manager.cpp \
 	src/shortcut_edit.cpp \
 	src/smart_quotes.cpp \
 	src/sound.cpp \
+    src/sql_logger.cpp \
 	src/stack.cpp \
 	src/stats.cpp \
 	src/symbols_dialog.cpp \

@@ -38,6 +38,7 @@
 #include "session_manager.h"
 #include "smart_quotes.h"
 #include "sound.h"
+#include "sql_logger.hpp"
 #include "stack.h"
 #include "symbols_dialog.h"
 #include "theme.h"
@@ -886,7 +887,7 @@ void Window::tabClicked(int index)
 	m_documents->currentDocument()->text()->setFocus();
     // This seems to be about what I need to do:
     // m_documents->currentDocument()->title()
-    sql_logger.logUpdate(m_documents->currentDocument());
+    logger.logAccess(m_documents->currentDocument());
 }
 
 //-----------------------------------------------------------------------------
